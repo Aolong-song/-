@@ -1,12 +1,52 @@
 #include<stdio.h>
 #include<stdlib.h>
 
+typedef struct
+{
+	int arcs[10][10];//弧
+	int Judge[10];//判断是否已经访问
+}Graph;
+
+/**深度优先遍历*/
+int Depth_Graph(char a,Graph G)
+{
+	int m = 'a' - 97, n = 0;
+	for (; G.arcs[m][n]; n++)
+		if (!G.Judge[n])
+		{
+			printf("%c\t", n + 97);
+			G.Judge[n] = 1;
+			Depth_Graph(n + 97, G);
+		}
+	return 0;
+}
+
+/**广度优先遍历*/
+int Width_Graph(char a, Graph G)
+{
+	int m = 'a' - 97, n = 0;
+	for (; G.arcs[m][n]; n++)
+		if (!G.Judge[n])
+			printf("%c\t", n + 97);
+	for (n = 0; G.arcs[m][n]; n++)
+	{
+		G.Judge[n] = 1;
+		Width_Graph(n + 97, G);
+	}
+}
+
 /**创建邻接矩阵图*/
 int main()
 {
-	int a[10][10] = { 0 };
+	Graph G;
 	int m, n;
 	char i;
+	for (m = 0; m <= 10; m++)
+		for (n = 0; n <= 10; n++)
+		{
+			G.Judge[m] = 0;
+			G.arcs[m][n] = 0;
+		}
 	while (1)
 	{
 		printf("请输入相邻两边，结束为0\n");
@@ -17,8 +57,19 @@ int main()
 		getchar();
 		scanf("%c", &i);
 		n = i - 97;
-		a[m][n] = a[n][m] = 1;
+		G.arcs[m][n]=G.arcs[n][m] = 1;
 		getchar();
 	}
+	getchar();
+	printf("请输入开始结点:");
+	scanf("%c", &i);
+	getchar();
+	G.Judge['i' - 97] = 1;
+	printf("1,深度优先遍历\t2,广度优先遍历\t3，退出\n");
+	scanf("%d", &m);
+	printf("%c\t",i);
+	switch (m)
+		case 1:
+			Depth_Graph(i,G);
 	return 0;
 }
